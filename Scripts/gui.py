@@ -56,8 +56,7 @@ def Decrypt():
     tdecry.tdecryption(n.get(),cipher.get(),key.get())
 #creating tabs
 root.title("T&F ENCRYPTOR")
-imagepath=resource_path("key.png")
-photo = PhotoImage(file = imagepath)
+photo = PhotoImage(file = resource_path("key.png"))
 root.iconphoto(False, photo)
 tabControl = ttk.Notebook(root)
   

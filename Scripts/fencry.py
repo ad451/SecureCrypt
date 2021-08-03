@@ -1,11 +1,14 @@
 from cryptography.fernet import Fernet
 import key_generator
+import codecs
+import shutil
 import ctypes  # An included library with Python install.
 def Mbox(title, text, style):
     return ctypes.windll.user32.MessageBoxW(0, text, title, style)
 #symmetric encryption
 key=0
 def asymmetricencryption(key,size):
+    print(key)
     key=key.decode('utf-8')
     size=key_generator.key(size)
     f = open("keys.txt", "w")
@@ -34,8 +37,16 @@ def asymmetricencryption(key,size):
 def symmetricencryption(m,size):
     global key
     key=Fernet.generate_key()
-    f=open(f'{m}','r')
-    k=f.read()
+    o=""
+    for i in m[::-1]:
+        if i=='.':
+           break
+        else:
+            o+=i
+    shutil.copy(f'{m}','backup'+'.'+o[::-1])        
+    with codecs.open(f'{m}', 'r', encoding='utf-8',
+                 errors='ignore') as f:
+                 k=f.read()
     f.close()
     backup=open('backup.txt','w')
     backup.write(k)
