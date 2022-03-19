@@ -4,6 +4,7 @@ def Mbox(title, text, style):
     return ctypes.windll.user32.MessageBoxW(0, text, title, style)
 # asymmertci decryption
 msg=""
+print(msg)
 def symmetricdecryption(msg,h):
     msg=bytes(msg,'utf-8')
     print(msg)
