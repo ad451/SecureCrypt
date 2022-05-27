@@ -56,8 +56,8 @@ def Decrypt():
     tdecry.tdecryption(n.get(),cipher.get(),key.get())
 #creating tabs
 root.title("T&F ENCRYPTOR")
-photo = PhotoImage(file = resource_path("key.png"))
-root.iconphoto(False, photo)
+# photo = PhotoImage(file = resource_path("key.png"))
+# root.iconphoto(False, photo)
 tabControl = ttk.Notebook(root)
   
 tab1 = Frame(tabControl)
@@ -76,6 +76,7 @@ Label(tab1, text ="ENTER THE SIZE:",font="comicsansms 9 bold").grid(column = 0, 
 size = IntVar()
 sizeE = Entry(tab1, textvariable = size)
 sizeE.grid(row=1, column=1)
+sizeE.delete(0, END)
 Label(tab1, text ="ENTER THE TEXT:",font="comicsansms 9 bold").grid(column = 0, row = 2,padx = 10,pady = 20)  
 text = StringVar()
 textE = Entry(tab1, textvariable = text)
@@ -102,6 +103,7 @@ Label(tab2, text ="ENCRYPTION",font="comicsansms 11 bold").grid(column = 0,row =
 Label(tab2, text ="ENTER THE SIZE:",font="comicsansms 9 bold").grid(column = 0, row = 1,padx = 10,pady = 20)  
 sizef = IntVar()
 sizeE = Entry(tab2, textvariable = sizef)
+sizeE.delete(0, END)
 sizeE.grid(row=1, column=1)
 Button(tab2, text ='Select File', command = lambda:open_file()).grid(column=0,row=2,padx=10,pady=20)
 Button(tab2,text="Encrypt",command=encrypt_file).grid(column=0,row=3,padx=10,pady=20)
