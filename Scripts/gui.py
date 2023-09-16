@@ -1,132 +1,180 @@
-from tkinter import font, ttk
-from tkinter import *
-from tkinter.filedialog import askopenfile, askopenfilename
+import tkinter as tk
+from tkinter import ttk, filedialog, messagebox
 import tencry
 import tdecry
 import fencry
 import fdecry
-import ctypes
-import os
-import sys
-def resource_path(relative_path):
-    base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
-    return os.path.join(base_path, relative_path)
+from ttkthemes import ThemedTk
 
-#root
-root = Tk()
-# all functions
-root.geometry("400x670")
-root.maxsize(400,670)
-root.minsize(400,670)
-filepath=""
 def open_file():
-    global filepath
-    file=askopenfilename()
-    if file is not None:
-        filepath=file
-def Mbox(title, text, style):
-    return ctypes.windll.user32.MessageBoxW(0, text, title, style)        
-def add_tab(event):
-    alltabs=tabControl.tabs()
-    if tabControl.select()==alltabs[-1]:
-        Mbox('Help', 'Welcome to T&F Encryptor!'+'\n'+'\n'+
-        'Below points can help you to get started with the application'+'\n'+'\n'+
-        '1) The application provides encryption and decryption functionalities for text and files.'+'\n'+'\n'+
-        '2) The Text tab helps you to encrypt and decrypt text based on rsa encryption.'+'\n'+'\n'+
-        '3) The File tab helps you to  encrypt and decrypt files based on a combination of symmetric and asymmetric encryption methods.'+'\n'+'\n'+
-        '4) All other steps are self-explanatory and as you go through the respective encryption process,you will '+
-         'be explained what to do next once you are done with encryption or decryption.' +'\n'+'\n'+
-         '5) NOTE-In case you dont get the correct result try using higher values for the size'+'\n'+'\n'+
-         'Enjoy!!!', 1)        
+    filepath = filedialog.askopenfilename(filetypes=[("All Files", "*.*")])
+    if filepath:
+        file_entry.delete(0, tk.END)
+        file_entry.insert(0, filepath)
+
+def encrypt_text():
+    size_value = size_var.get()
+    text_value = text_var.get()
+    if size_value < 4:
+        messagebox.showerror("Error", "Enter a number greater than 3")
+    else:
+        encrypted_text = tencry.tencryption(size_value, text_value)
+        cipher_text.delete(0, tk.END)
+        cipher_text.insert(0, encrypted_text)
+
+def decrypt_text():
+    cipher_value = cipher_var.get()
+    key_value = key_var.get()
+    n_value = n_var.get()
+    decrypted_text = tdecry.tdecryption(n_value, cipher_value, key_value)
+    text_var.set(decrypted_text)
+
 def encrypt_file():
-    if len(filepath)!=0:
-        if sizef.get()<4:
-            Mbox('error','enter a number greater than 3',1) 
-        else:    
-            fencry.symmetricencryption(filepath,sizef.get())     
+    filepath = file_entry.get()
+    size_value = file_size_var.get()
+    if not filepath:
+        messagebox.showerror("Error", "Please select a file to encrypt")
+    elif size_value < 4:
+        messagebox.showerror("Error", "Enter a number greater than 3")
+    else:
+        fencry.symmetricencryption(filepath, size_value)
+
 def decrypt_file():
-    if len(filepath)!=0:
-       fdecry.asymmetricdecryption(nf.get(),keyf.get(),cipherf.get(),filepath)     
-def Encrypt():
-    if size.get()<4:
-       Mbox('error','enter a number greater than 3',1) 
-    else:   
-       tencry.tencryption(size.get(),text.get())
-def Decrypt():
-    tdecry.tdecryption(n.get(),cipher.get(),key.get())
-#creating tabs
-root.title("T&F ENCRYPTOR")
-# photo = PhotoImage(file = resource_path("key.png"))
-# root.iconphoto(False, photo)
-tabControl = ttk.Notebook(root)
-  
-tab1 = Frame(tabControl)
-tab2 = Frame(tabControl)
-tabControl.add(tab1, text ='Text   ')
-tabControl.add(tab2, text ='File   ')
-tabControl.add(Frame(tabControl), text ='Help   ')
+    filepath = file_entry.get()
+    cipher_value = file_cipher_var.get()
+    key_value = file_key_var.get()
+    n_value = file_n_var.get()
+    fdecry.asymmetricdecryption(n_value, key_value, cipher_value, filepath)
 
-tabControl.pack(expand = 4, fill ="both")
-tabControl.bind('<ButtonRelease-1>', add_tab)
-#tab text 
-#endcryption
+# Create the main window with a modern theme
+root = ThemedTk(theme="arc")
+root.title("T&F Encryptor")
+root.geometry("400x670")
+root.minsize(400, 670)
 
-Label(tab1, text ="ENCRYPTION",font="comicsansms 11 bold").grid(column = 0, row = 0,padx = 10,pady = 20) 
-Label(tab1, text ="ENTER THE SIZE:",font="comicsansms 9 bold").grid(column = 0, row = 1,padx = 10,pady = 20)  
-size = IntVar()
-sizeE = Entry(tab1, textvariable = size)
-sizeE.grid(row=1, column=1)
-sizeE.delete(0, END)
-Label(tab1, text ="ENTER THE TEXT:",font="comicsansms 9 bold").grid(column = 0, row = 2,padx = 10,pady = 20)  
-text = StringVar()
-textE = Entry(tab1, textvariable = text)
-textE.grid(row=2, column=1)
-Button(tab1,text="Encrypt",command=Encrypt).grid(column=0,row=3,padx=10,pady=20)
-#decryption
-Label(tab1, text ="DECRYPTION",font="comicsansms 11 bold").grid(column = 0, row = 4,padx = 10,pady = 20) 
-Label(tab1, text ="ENTER THE CIPHER:",font="comicsansms 9 bold").grid(column = 0, row = 5,padx = 10,pady = 20)  
-cipher = StringVar()
-cipherD = Entry(tab1, textvariable = cipher)
-cipherD.grid(row=5, column=1)
-Label(tab1, text ="ENTER THE KEY:",font="comicsansms 9 bold").grid(column = 0, row = 6,padx = 10,pady = 20)  
-key = StringVar()
-keyD = Entry(tab1, textvariable = key)
-keyD.grid(row=6, column=1)
-Label(tab1, text ="ENTER THE VALUE of N:",font="comicsansms 9 bold").grid(column = 0, row = 7,padx = 10,pady = 20)  
-n = StringVar()
-nD = Entry(tab1, textvariable = n)
-nD.grid(row=7, column=1)
-Button(tab1,text="Decrypt",command=Decrypt).grid(column=0,row=8,padx=10,pady=20)
-#tab file
-#encryption
-Label(tab2, text ="ENCRYPTION",font="comicsansms 11 bold").grid(column = 0,row = 0, padx = 10,pady = 20)
-Label(tab2, text ="ENTER THE SIZE:",font="comicsansms 9 bold").grid(column = 0, row = 1,padx = 10,pady = 20)  
-sizef = IntVar()
-sizeE = Entry(tab2, textvariable = sizef)
-sizeE.delete(0, END)
-sizeE.grid(row=1, column=1)
-Button(tab2, text ='Select File', command = lambda:open_file()).grid(column=0,row=2,padx=10,pady=20)
-Button(tab2,text="Encrypt",command=encrypt_file).grid(column=0,row=3,padx=10,pady=20)
-#decryption
+# Create a notebook for tabs
+notebook = ttk.Notebook(root)
+notebook.pack(fill=tk.BOTH, expand=True)
 
-Label(tab2, text ="DECRYPTION",font="comicsansms 11 bold").grid(column = 0,row = 4, padx = 10,pady = 20)
+# Text tab
+text_tab = ttk.Frame(notebook)
+notebook.add(text_tab, text="Text")
 
-Label(tab2, text ="ENTER THE CIPHER:",font="comicsansms 9 bold").grid(column = 0, row = 5,padx = 10,pady = 20)  
-cipherf = StringVar()
-cipherD = Entry(tab2, textvariable = cipherf)
-cipherD.grid(row=5, column=1)
+# Encryption section
+text_encrypt_frame = ttk.LabelFrame(text_tab, text="Encryption")
+text_encrypt_frame.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
 
-Label(tab2, text ="ENTER THE KEY:",font="comicsansms 9 bold").grid(column = 0, row = 6,padx = 10,pady = 20)  
-keyf = StringVar()
-keyD = Entry(tab2, textvariable = keyf)
-keyD.grid(row=6, column=1)
+size_var = tk.IntVar()
+text_var = tk.StringVar()
 
-Label(tab2, text ="ENTER THE VALUE of N:",font="comicsansms 9 bold").grid(column = 0, row = 7,padx = 10,pady = 20)  
-nf= StringVar()
-nD = Entry(tab2, textvariable = nf)
-nD.grid(row=7, column=1)
+size_label = ttk.Label(text_encrypt_frame, text="Enter the Size:", font=("Helvetica", 12, "bold"))
+text_label = ttk.Label(text_encrypt_frame, text="Enter the Text:", font=("Helvetica", 12, "bold"))
+size_entry = ttk.Entry(text_encrypt_frame, textvariable=size_var, font=("Helvetica", 12))
+text_entry = ttk.Entry(text_encrypt_frame, textvariable=text_var, font=("Helvetica", 12))
+encrypt_button = ttk.Button(text_encrypt_frame, text="Encrypt", command=encrypt_text, style="Bold.TButton")
 
-Button(tab2, text ='Select File', command = lambda:open_file()).grid(column=0,row=8,padx=10,pady=20)
-Button(tab2,text="Decrypt",command=decrypt_file).grid(column=0,row=9,padx=10,pady=20)
+size_label.grid(row=0, column=0, padx=5, pady=5, sticky="e")
+size_entry.grid(row=0, column=1, padx=5, pady=5)
+text_label.grid(row=1, column=0, padx=5, pady=5, sticky="e")
+text_entry.grid(row=1, column=1, padx=5, pady=5)
+encrypt_button.grid(row=3, column=0, columnspan=2, padx=5, pady=10)
 
+# Decryption section
+text_decrypt_frame = ttk.LabelFrame(text_tab, text="Decryption")
+text_decrypt_frame.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
+
+cipher_var = tk.StringVar()
+key_var = tk.StringVar()
+n_var = tk.StringVar()
+cipher_label = ttk.Label(text_decrypt_frame, text="Enter the Cipher:", font=("Helvetica", 12, "bold"))
+cipher_entry = ttk.Entry(text_decrypt_frame, textvariable=cipher_var, font=("Helvetica", 12))
+key_label = ttk.Label(text_decrypt_frame, text="Enter the Key:", font=("Helvetica", 12, "bold"))
+key_entry = ttk.Entry(text_decrypt_frame, textvariable=key_var, font=("Helvetica", 12))
+n_label = ttk.Label(text_decrypt_frame, text="Enter the Value of N:", font=("Helvetica", 12, "bold"))
+n_entry = ttk.Entry(text_decrypt_frame, textvariable=n_var, font=("Helvetica", 12))
+decrypt_button = ttk.Button(text_decrypt_frame, text="Decrypt", command=decrypt_text, style="Bold.TButton")
+
+cipher_label.grid(row=0, column=0, padx=5, pady=5)
+cipher_entry.grid(row=0, column=1, padx=5, pady=5)
+key_label.grid(row=1, column=0, padx=5, pady=5, sticky="e")
+key_entry.grid(row=1, column=1, padx=5, pady=5)
+n_label.grid(row=2, column=0, padx=5, pady=5, sticky="e")
+n_entry.grid(row=2, column=1, padx=5, pady=5)
+decrypt_button.grid(row=3, column=0, columnspan=2, padx=5, pady=10)
+
+# File tab
+file_tab = ttk.Frame(notebook)
+notebook.add(file_tab, text="File")
+
+# File encryption section
+file_encrypt_frame = ttk.LabelFrame(file_tab, text="File Encryption")
+file_encrypt_frame.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
+
+file_size_var = tk.IntVar()
+file_size_label = ttk.Label(file_encrypt_frame, text="Enter the Size:", font=("Helvetica", 12, "bold"))
+file_size_entry = ttk.Entry(file_encrypt_frame, textvariable=file_size_var, font=("Helvetica", 12))
+select_file_button = ttk.Button(file_encrypt_frame, text="Select File", command=open_file, style="Bold.TButton")
+encrypt_file_button = ttk.Button(file_encrypt_frame, text="Encrypt", command=encrypt_file, style="Bold.TButton")
+
+file_size_label.grid(row=1, column=0, padx=5, pady=5, sticky="e")
+file_size_entry.grid(row=1, column=1, padx=5, pady=5)
+select_file_button.grid(row=1, column=2, padx=5, pady=5)
+encrypt_file_button.grid(row=2, column=0, columnspan=3, padx=5, pady=10)
+
+# File decryption section
+file_decrypt_frame = ttk.LabelFrame(file_tab, text="File Decryption")
+file_decrypt_frame.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
+
+file_cipher_var = tk.StringVar()
+file_key_var = tk.StringVar()
+file_n_var = tk.StringVar()
+
+file_cipher_label = ttk.Label(file_decrypt_frame, text="Enter the Cipher:", font=("Helvetica", 12, "bold"))
+file_cipher_entry = ttk.Entry(file_decrypt_frame, textvariable=file_cipher_var, font=("Helvetica", 12))
+file_key_label = ttk.Label(file_decrypt_frame, text="Enter the Key:", font=("Helvetica", 12, "bold"))
+file_key_entry = ttk.Entry(file_decrypt_frame, textvariable=file_key_var, font=("Helvetica", 12))
+file_n_label = ttk.Label(file_decrypt_frame, text="Enter the Value of N:", font=("Helvetica", 12, "bold"))
+file_n_entry = ttk.Entry(file_decrypt_frame, textvariable=file_n_var, font=("Helvetica", 12))
+decrypt_file_button = ttk.Button(file_decrypt_frame, text="Decrypt", command=decrypt_file, style="Bold.TButton")
+
+file_cipher_label.grid(row=0, column=0, padx=5, pady=5)
+file_cipher_entry.grid(row=0, column=1, padx=5, pady=5)
+file_key_label.grid(row=1, column=0, padx=5, pady=5, sticky="e")
+file_key_entry.grid(row=1, column=1, padx=5, pady=5)
+file_n_label.grid(row=2, column=0, padx=5, pady=5, sticky="e")
+file_n_entry.grid(row=2, column=1, padx=5, pady=5)
+decrypt_file_button.grid(row=3, column=0, columnspan=2, padx=5, pady=10)
+
+# Help tab
+help_tab = ttk.Frame(notebook)
+notebook.add(help_tab, text="Help")
+
+help_text = """
+Welcome to T&F Encryptor!
+
+This application provides encryption and decryption functionalities for text and files.
+
+Text Tab:
+1) Enter the size and text for encryption.
+2) Click 'Encrypt' to encrypt the text.
+3) For decryption, enter the cipher, key, and N value, then click 'Decrypt'.
+
+File Tab:
+1) Select a file and enter the size for encryption.
+2) Click 'Encrypt' to encrypt the file.
+3) For decryption, enter the cipher, key, and N value, then click 'Decrypt'.
+
+Note: For both text and file encryption, the size should be greater than 3.
+
+Enjoy!
+"""
+
+help_label = ttk.Label(help_tab, text=help_text, wraplength=350, justify=tk.LEFT, font=("Helvetica", 12))
+help_label.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
+
+# Create a custom style for bold buttons
+style = ttk.Style()
+style.configure("Bold.TButton", font=("Helvetica", 12, "bold"))
+
+# Start the main loop
 root.mainloop()
