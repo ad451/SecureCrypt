@@ -7,10 +7,8 @@ import fdecry
 from ttkthemes import ThemedTk
 
 def open_file():
+    global filepath
     filepath = filedialog.askopenfilename(filetypes=[("All Files", "*.*")])
-    if filepath:
-        file_entry.delete(0, tk.END)
-        file_entry.insert(0, filepath)
 
 def encrypt_text():
     size_value = size_var.get()
@@ -30,7 +28,6 @@ def decrypt_text():
     text_var.set(decrypted_text)
 
 def encrypt_file():
-    filepath = file_entry.get()
     size_value = file_size_var.get()
     if not filepath:
         messagebox.showerror("Error", "Please select a file to encrypt")
@@ -40,7 +37,6 @@ def encrypt_file():
         fencry.symmetricencryption(filepath, size_value)
 
 def decrypt_file():
-    filepath = file_entry.get()
     cipher_value = file_cipher_var.get()
     key_value = file_key_var.get()
     n_value = file_n_var.get()
@@ -118,8 +114,8 @@ encrypt_file_button = ttk.Button(file_encrypt_frame, text="Encrypt", command=enc
 
 file_size_label.grid(row=1, column=0, padx=5, pady=5, sticky="e")
 file_size_entry.grid(row=1, column=1, padx=5, pady=5)
-select_file_button.grid(row=1, column=2, padx=5, pady=5)
-encrypt_file_button.grid(row=2, column=0, columnspan=3, padx=5, pady=10)
+select_file_button.grid(row=2, column=0, padx=5, pady=5)
+encrypt_file_button.grid(row=3, column=0, columnspan=2, padx=5, pady=10)
 
 # File decryption section
 file_decrypt_frame = ttk.LabelFrame(file_tab, text="File Decryption")
@@ -136,6 +132,7 @@ file_key_entry = ttk.Entry(file_decrypt_frame, textvariable=file_key_var, font=(
 file_n_label = ttk.Label(file_decrypt_frame, text="Enter the Value of N:", font=("Helvetica", 12, "bold"))
 file_n_entry = ttk.Entry(file_decrypt_frame, textvariable=file_n_var, font=("Helvetica", 12))
 decrypt_file_button = ttk.Button(file_decrypt_frame, text="Decrypt", command=decrypt_file, style="Bold.TButton")
+select_file_button = ttk.Button(file_decrypt_frame, text="Select File", command=open_file, style="Bold.TButton")
 
 file_cipher_label.grid(row=0, column=0, padx=5, pady=5)
 file_cipher_entry.grid(row=0, column=1, padx=5, pady=5)
@@ -143,7 +140,8 @@ file_key_label.grid(row=1, column=0, padx=5, pady=5, sticky="e")
 file_key_entry.grid(row=1, column=1, padx=5, pady=5)
 file_n_label.grid(row=2, column=0, padx=5, pady=5, sticky="e")
 file_n_entry.grid(row=2, column=1, padx=5, pady=5)
-decrypt_file_button.grid(row=3, column=0, columnspan=2, padx=5, pady=10)
+decrypt_file_button.grid(row=4, column=0, columnspan=2, padx=5, pady=10)
+select_file_button.grid(row=3, column=0, padx=5, pady=5)
 
 # Help tab
 help_tab = ttk.Frame(notebook)
