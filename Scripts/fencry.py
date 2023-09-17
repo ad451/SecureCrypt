@@ -11,16 +11,23 @@ def show_message(title, text, style):
 # Asymmetric encryption
 def asymmetric_encryption(text, size):
     try:
-        key = text.encode('utf-8')
-        size = key_generator.key(size)
-        
-        with open("keys.txt", "w") as key_file:
-            key_file.write(f"N: {size[0][0]}\n")
-            key_file.write(f"Public Key: {size[0][1]}\n")
-            key_file.write(f"Private Keys: {', '.join(map(str, size[1]))}\n")
+        key=text.decode('utf-8')
+        size = key_generator.generate_rsa_key(size)
+        f = open("keys.txt", "w")
+        count=0
+        for i in size[1]:
+            if count==0:
+               f.write("N :"+str(i))
+            else:
+               f.write("private key : "+str(i))
+            count+=1  
+            f.write('\n')
+    
         
         e = size[0][1]
         n = size[0][0]
+        f.write("public key : "+str(e))
+        f.close()
         cipher = " ".join(str(pow(ord(c), e, n)) for c in key)
         
         with open('cipher.txt', 'w') as cipher_file:
@@ -35,21 +42,33 @@ def asymmetric_encryption(text, size):
 def symmetric_encryption(file_path, size):
     try:
         global key
-        key = Fernet.generate_key()
-        file_name = file_path.split(".")[0]
-        backup_file_name = f'backup.{file_name[::-1]}'
+        key=Fernet.generate_key()
+        o=""
+        for i in file_path[::-1]:
+            if i=='.':
+                break
+            else:
+                o+=i
+        shutil.copy(f'{file_path}','backup'+'.'+o[::-1])        
+        with codecs.open(f'{file_path}', 'r', encoding='utf-8',
+                    errors='ignore') as f:
+                    k=f.read()
+        f.close()
         
-        shutil.copy(file_path, backup_file_name)
+        #creating the backup file
+        backup=open('backup.txt','w')
+        backup.write(k)
+        backup.close()
         
-        with codecs.open(file_path, 'r', encoding='utf-8', errors='ignore') as file:
-            data = file.read()
+        f=open(f'{file_path}','rb')
+        k=f.read()
+        g=Fernet(key)
+        f.close()
+        encryteddata=g.encrypt(k)
         
-        with open(file_path, 'rb') as file:
-            original_data = file.read()
-            cipher = Fernet(key).encrypt(original_data)
-        
-        with open(file_path, 'wb') as file:
-            file.write(cipher)
+        f=open(f'{file_path}','wb')
+        f.write(encryteddata)
+        f.close()
         
         asymmetric_encryption(key, size)
     

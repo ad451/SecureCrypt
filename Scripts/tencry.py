@@ -34,7 +34,7 @@ def text_encryption(key_size, text):
     Notes:
         If the result of pow(m, e, n) is zero, an error message is displayed.
     """
-    size = key_generator.key(key_size)
+    size = key_generator.generate_rsa_key(key_size)
 
     with open("keys.txt", "w") as key_file:
         count = 0

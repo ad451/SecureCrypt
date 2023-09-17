@@ -18,15 +18,14 @@ def encrypt_text():
     if size_value < 4:
         messagebox.showerror("Error", "Enter a number greater than 3")
     else:
-        encrypted_text = tencry.tencryption(size_value, text_value)
-        cipher_text.delete(0, tk.END)
-        cipher_text.insert(0, encrypted_text)
+        tencry.text_encryption(size_value, text_value)
+       
 
 def decrypt_text():
     cipher_value = cipher_var.get()
     key_value = key_var.get()
     n_value = n_var.get()
-    decrypted_text = tdecry.tdecryption(n_value, cipher_value, key_value)
+    decrypted_text = tdecry.text_decryption(n_value, cipher_value, key_value)
     text_var.set(decrypted_text)
 
 def encrypt_file():
@@ -36,17 +35,17 @@ def encrypt_file():
     elif size_value < 4:
         messagebox.showerror("Error", "Enter a number greater than 3")
     else:
-        fencry.symmetricencryption(filepath, size_value)
+        fencry.symmetric_encryption(filepath, size_value)
 
 def decrypt_file():
     cipher_value = file_cipher_var.get()
     key_value = file_key_var.get()
     n_value = file_n_var.get()
-    fdecry.asymmetricdecryption(n_value, key_value, cipher_value, filepath)
+    fdecry.asymmetric_decryption(n_value, key_value, cipher_value, filepath)
 
 # Create the main window with a modern theme
 root = ThemedTk(theme="arc")
-root.title("T&F Encryptor")
+root.title("SecureCrypt")
 root.geometry("400x670")
 root.minsize(400, 670)
 
