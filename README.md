@@ -31,9 +31,12 @@ SecureCrypt is a simple GUI application that provides encryption and decryption 
 2. Ensure that you follow the size requirements for encryption (greater than 3). 
 
 ## Releases
-Download the latest release [here]()
+Download the latest release [here](https://github.com/ad451/SecureCrypt/releases)
 
 ## Screenshots
+[![Screenshot-6299.png](https://i.postimg.cc/mgXxVSDP/Screenshot-6299.png)](https://postimg.cc/XrCDYd9W)
+
+[![Screenshot-6300.png](https://i.postimg.cc/fbpGQTYZ/Screenshot-6300.png)](https://postimg.cc/Jy36b8Td)
 
 ## Acknowledgments
 - Thanks to the Tkinter library for the GUI components.
