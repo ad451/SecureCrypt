@@ -6,9 +6,11 @@ import fencry
 import fdecry
 from ttkthemes import ThemedTk
 
-def open_file():
+def open_file(select_file_button):
     global filepath
     filepath = filedialog.askopenfilename(filetypes=[("All Files", "*.*")])
+    if filepath:
+        select_file_button.config(text="File Selected")
 
 def encrypt_text():
     size_value = size_var.get()
@@ -62,7 +64,7 @@ text_encrypt_frame.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
 
 size_var = tk.IntVar()
 text_var = tk.StringVar()
-
+size_var.set('') 
 size_label = ttk.Label(text_encrypt_frame, text="Enter the Size:", font=("Helvetica", 12, "bold"))
 text_label = ttk.Label(text_encrypt_frame, text="Enter the Text:", font=("Helvetica", 12, "bold"))
 size_entry = ttk.Entry(text_encrypt_frame, textvariable=size_var, font=("Helvetica", 12))
@@ -107,14 +109,15 @@ file_encrypt_frame = ttk.LabelFrame(file_tab, text="File Encryption")
 file_encrypt_frame.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
 
 file_size_var = tk.IntVar()
+file_size_var.set('') 
 file_size_label = ttk.Label(file_encrypt_frame, text="Enter the Size:", font=("Helvetica", 12, "bold"))
 file_size_entry = ttk.Entry(file_encrypt_frame, textvariable=file_size_var, font=("Helvetica", 12))
-select_file_button = ttk.Button(file_encrypt_frame, text="Select File", command=open_file, style="Bold.TButton")
+select_file_button_encrypt = ttk.Button(file_encrypt_frame, text="Select File", command=lambda: open_file(select_file_button_encrypt), style="Bold.TButton")
 encrypt_file_button = ttk.Button(file_encrypt_frame, text="Encrypt", command=encrypt_file, style="Bold.TButton")
 
 file_size_label.grid(row=1, column=0, padx=5, pady=5, sticky="e")
 file_size_entry.grid(row=1, column=1, padx=5, pady=5)
-select_file_button.grid(row=2, column=0, padx=5, pady=5)
+select_file_button_encrypt.grid(row=2, column=0, padx=5, pady=5)
 encrypt_file_button.grid(row=3, column=0, columnspan=2, padx=5, pady=10)
 
 # File decryption section
@@ -132,7 +135,7 @@ file_key_entry = ttk.Entry(file_decrypt_frame, textvariable=file_key_var, font=(
 file_n_label = ttk.Label(file_decrypt_frame, text="Enter the Value of N:", font=("Helvetica", 12, "bold"))
 file_n_entry = ttk.Entry(file_decrypt_frame, textvariable=file_n_var, font=("Helvetica", 12))
 decrypt_file_button = ttk.Button(file_decrypt_frame, text="Decrypt", command=decrypt_file, style="Bold.TButton")
-select_file_button = ttk.Button(file_decrypt_frame, text="Select File", command=open_file, style="Bold.TButton")
+select_file_button_decrypt = ttk.Button(file_decrypt_frame, text="Select File", command=lambda: open_file(select_file_button_decrypt), style="Bold.TButton")
 
 file_cipher_label.grid(row=0, column=0, padx=5, pady=5)
 file_cipher_entry.grid(row=0, column=1, padx=5, pady=5)
@@ -141,7 +144,7 @@ file_key_entry.grid(row=1, column=1, padx=5, pady=5)
 file_n_label.grid(row=2, column=0, padx=5, pady=5, sticky="e")
 file_n_entry.grid(row=2, column=1, padx=5, pady=5)
 decrypt_file_button.grid(row=4, column=0, columnspan=2, padx=5, pady=10)
-select_file_button.grid(row=3, column=0, padx=5, pady=5)
+select_file_button_decrypt.grid(row=3, column=0, padx=5, pady=5)
 
 # Help tab
 help_tab = ttk.Frame(notebook)
