@@ -18,5 +18,23 @@ SecureCrypt is a simple GUI application that provides encryption and decryption 
 1. Clone the repository to your local machine:
 
    ```bash
-   git clone https://github.com/yourusername/TandF-Encryptor.git
-   cd TandF-Encryptor
+   git clone https://github.com/yourusername/SecureCrypt.git
+   cd SecureCrypt
+2. Run the Gui.py and Follow the instructions in the Usage section
+### Usage
+
+1.Explore the application's features in the Text and File tabs:
+
+- Text Tab: Encrypt and decrypt text messages.
+- File Tab: Encrypt and decrypt files.
+  
+2. Ensure that you follow the size requirements for encryption (greater than 3). 
+
+## Releases
+Download the latest release [here]()
+
+## Screenshots
+
+## Acknowledgments
+- Thanks to the Tkinter library for the GUI components.
+- PyInstaller for creating standalone executables.
